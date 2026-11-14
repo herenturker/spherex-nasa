@@ -1,6 +1,6 @@
-.PHONY: all clean
+.PHONY: all clean test
 
-all: engine
+all: engine test
 
 engine: engine.cpp
 	g++ -O3 -std=c++17 \
@@ -11,3 +11,6 @@ engine: engine.cpp
 
 clean:
 	rm -f engine
+
+test:
+	python3 test_engine.py

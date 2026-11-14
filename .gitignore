@@ -3,3 +3,5 @@ temp_eski.txt
 temp_yeni.txt
 .streamlit/secrets.toml
 __pycache__/
+test_new.txt
+test_old.txt
