@@ -1,1 +1,5 @@
+engine
+temp_eski.txt
+temp_yeni.txt
 .streamlit/secrets.toml
+__pycache__/
