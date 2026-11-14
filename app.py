@@ -20,7 +20,7 @@ st.set_page_config(page_title="SPHEREx Astrofizikçi AI", layout="centered")
 # --- Gemini API Başlatma ---
 if "GEMINI_API_KEY" in st.secrets:
     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-    MODEL_ID = "gemini-2.5-flash" 
+    MODEL_ID = "gemini-3.5-flash" 
 else:
     client = None
 
