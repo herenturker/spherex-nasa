@@ -28,7 +28,7 @@ st.markdown("""
         letter-spacing: -0.02em;
     }
     
-    /* Buttons - Modern Slate */
+    /* Modern Buttons */
     .stButton>button {
         background-color: #1E293B;
         color: #F8FAFC;
@@ -42,20 +42,6 @@ st.markdown("""
         background-color: #334155;
         border-color: #475569;
         color: #F8FAFC;
-    }
-    
-    /* Sliders */
-    .stSlider>div>div>div>div {
-        background-color: #475569;
-    }
-    
-    /* Custom Card Containers */
-    .metric-card {
-        background-color: #1E293B;
-        border: 1px solid #334155;
-        border-radius: 8px;
-        padding: 24px;
-        margin-bottom: 24px;
     }
     
     /* File Uploader */
@@ -77,6 +63,13 @@ st.markdown("""
     .stTabs [aria-selected="true"] {
         color: #F8FAFC !important;
         border-bottom: 2px solid #3B82F6 !important;
+    }
+    
+    /* Chat Input Styling */
+    [data-testid="stChatInput"] {
+        border-radius: 12px;
+        border: 1px solid #334155;
+        background-color: #1E293B;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -115,115 +108,127 @@ st.markdown("Compare multi-epoch infrared observations, run C++ edge-detection a
 tab_analysis, tab_chatbot = st.tabs(["Analysis Pipeline", "Scientific AI Chatbot"])
 
 # ------------------------------------------
-# TAB 1: ANALYSIS PIPELINE
+# TAB 1: ANALYSIS PIPELINE (Top-to-Bottom)
 # ------------------------------------------
 with tab_analysis:
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-        st.subheader("1. Observation Inputs")
-        
-        img_old = st.file_uploader("Upload Observation A (Old)", type=["png", "jpg", "jpeg"])
-        img_new = st.file_uploader("Upload Observation B (New)", type=["png", "jpg", "jpeg"])
-        
-        st.subheader("2. Scientific Data (Optional)")
-        data_file = st.file_uploader("Upload Spectral Data (CSV/JSON)", type=["csv", "json"])
-        
-        st.subheader("3. Engine Parameters")
-        threshold = st.slider("C++ Noise Threshold", min_value=10, max_value=255, value=50, 
-                              help="Pixels with differences below this threshold are discarded as noise.")
-        
-        run_btn = st.button("Execute Analysis Pipeline", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    with col2:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-        st.subheader("Analysis Results & AI Interpretation")
-        
-        if run_btn:
-            if not img_old or not img_new:
-                st.warning("Please upload both Observation A and Observation B to run the analysis.")
-            else:
-                with st.spinner("Converting images to scientific matrices..."):
-                    file_old = image_to_matrix_file(img_old, "temp_old.txt")
-                    file_new = image_to_matrix_file(img_new, "temp_new.txt")
-                
-                with st.spinner(f"Running C++ Engine (Threshold: {threshold})..."):
-                    try:
-                        result = subprocess.run(
-                            ["./engine", file_old, file_new, str(threshold)],
-                            capture_output=True, text=True, check=True
-                        )
-                        engine_output = result.stdout.strip()
-                        
-                        if "TESPIT_YOK" in engine_output or not engine_output:
-                            st.info("C++ Engine Result: No significant celestial changes detected above the threshold.")
-                            engine_summary = "No moving objects detected."
-                        else:
-                            st.success(f"C++ Engine Result:\n{engine_output}")
-                            engine_summary = engine_output
-                            
-                        data_summary = "No supplementary spectral data provided."
-                        if data_file:
-                            if data_file.name.endswith('.csv'):
-                                df = pd.read_csv(data_file)
-                                data_summary = df.head(10).to_string()
-                            elif data_file.name.endswith('.json'):
-                                data_summary = json.dumps(json.load(data_file), indent=2)[:1000]
-                            st.info("Supplementary data successfully loaded and sent to AI.")
-
-                        os.remove(file_old)
-                        os.remove(file_new)
-
-                    except subprocess.CalledProcessError as e:
-                        st.error(f"C++ Engine Execution Failed: {e.stderr}")
-                        engine_summary = "Engine failed."
-                        data_summary = ""
-
-                if engine_summary:
-                    with st.spinner("Astrophysicist AI is generating a scientific report..."):
-                        prompt = f"""
-                        You are an expert astrophysicist analyzing SPHEREx telescope data.
-                        Your C++ edge-detection engine scanned two images (Observation A and Observation B) and outputted the following:
-                        {engine_summary}
-                        
-                        Additionally, the observer provided this supplementary spectral data:
-                        {data_summary}
-                        
-                        Based on this information, write a concise, professional scientific report. 
-                        Address: What could this detected object be (e.g., asteroid, Kuiper Belt object, noise artifact)? 
-                        Does the spectral data support this hypothesis? 
-                        Keep the tone objective, scientific, and strictly professional.
-                        """
-                        
-                        try:
-                            response = client.models.generate_content(
-                                model=MODEL_ID,
-                                contents=prompt
-                            )
-                            st.markdown("### Astro-AI Report:")
-                            st.info(response.text)
-                        except Exception as e:
-                            st.error(f"Gemini API Error: {e}")
+    st.subheader("1. Observation Inputs")
+    img_old = st.file_uploader("Upload Observation A (Old)", type=["png", "jpg", "jpeg"])
+    img_new = st.file_uploader("Upload Observation B (New)", type=["png", "jpg", "jpeg"])
+    
+    st.subheader("2. Scientific Data (Optional)")
+    # Multiple file upload enabled here
+    data_files = st.file_uploader(
+        "Upload Spectral Data (CSV/JSON) - Multiple files allowed", 
+        type=["csv", "json"], 
+        accept_multiple_files=True
+    )
+    
+    st.subheader("3. Engine Parameters")
+    threshold = st.slider("C++ Noise Threshold", min_value=10, max_value=255, value=50, 
+                          help="Pixels with differences below this threshold are discarded as noise.")
+    
+    run_btn = st.button("Execute Analysis Pipeline", use_container_width=True)
+    
+    st.markdown("---")
+    st.subheader("Analysis Results & AI Interpretation")
+    
+    if run_btn:
+        if not img_old or not img_new:
+            st.warning("Please upload both Observation A and Observation B to run the analysis.")
         else:
-            st.info("Awaiting inputs. Upload images and click 'Execute Analysis Pipeline'.")
-        st.markdown("</div>", unsafe_allow_html=True)
+            with st.spinner("Converting images to scientific matrices..."):
+                file_old = image_to_matrix_file(img_old, "temp_old.txt")
+                file_new = image_to_matrix_file(img_new, "temp_new.txt")
+            
+            with st.spinner(f"Running C++ Engine (Threshold: {threshold})..."):
+                try:
+                    result = subprocess.run(
+                        ["./engine", file_old, file_new, str(threshold)],
+                        capture_output=True, text=True, check=True
+                    )
+                    engine_output = result.stdout.strip()
+                    
+                    if "TESPIT_YOK" in engine_output or not engine_output:
+                        st.info("C++ Engine Result: No significant celestial changes detected above the threshold.")
+                        engine_summary = "No moving objects detected."
+                    else:
+                        st.success(f"C++ Engine Result:\n{engine_output}")
+                        engine_summary = engine_output
+                        
+                    # Process Multiple Data Files
+                    data_summary = "No supplementary spectral data provided."
+                    if data_files:
+                        combined_data = []
+                        for df_file in data_files:
+                            if df_file.name.endswith('.csv'):
+                                df = pd.read_csv(df_file)
+                                combined_data.append(f"--- File: {df_file.name} ---\n{df.head(10).to_string()}")
+                            elif df_file.name.endswith('.json'):
+                                j_data = json.dumps(json.load(df_file), indent=2)
+                                combined_data.append(f"--- File: {df_file.name} ---\n{j_data[:1000]}")
+                        data_summary = "\n\n".join(combined_data)
+                        st.info(f"Loaded {len(data_files)} supplementary data file(s) for AI analysis.")
+
+                    os.remove(file_old)
+                    os.remove(file_new)
+
+                except subprocess.CalledProcessError as e:
+                    st.error(f"C++ Engine Execution Failed: {e.stderr}")
+                    engine_summary = "Engine failed."
+                    data_summary = ""
+
+            if engine_summary:
+                with st.spinner("Astrophysicist AI is generating a scientific report..."):
+                    prompt = f"""
+                    You are an expert astrophysicist analyzing SPHEREx telescope data.
+                    Your C++ edge-detection engine scanned two images (Observation A and Observation B) and outputted the following:
+                    {engine_summary}
+                    
+                    Additionally, the observer provided this supplementary spectral data:
+                    {data_summary}
+                    
+                    Based on this information, write a concise, professional scientific report. 
+                    Address: What could this detected object be (e.g., asteroid, Kuiper Belt object, noise artifact)? 
+                    Does the spectral data support this hypothesis? 
+                    Keep the tone objective, scientific, and strictly professional.
+                    """
+                    
+                    try:
+                        response = client.models.generate_content(
+                            model=MODEL_ID,
+                            contents=prompt
+                        )
+                        st.markdown("### Astro-AI Report:")
+                        st.info(response.text)
+                    except Exception as e:
+                        st.error(f"Gemini API Error: {e}")
+    else:
+        st.info("Awaiting inputs. Upload images and click 'Execute Analysis Pipeline'.")
 
 # ------------------------------------------
-# TAB 2: CHATBOT
+# TAB 2: MODERN CHATBOT WITH DATA ANALYSIS
 # ------------------------------------------
 with tab_chatbot:
     st.subheader("Scientific AI Assistant")
-    st.markdown("Query the AI regarding SPHEREx data, astrophysics, or the analysis methodology.")
+    st.markdown("Query the AI regarding SPHEREx data, astrophysics, or upload context files for direct analysis.")
+    
+    # Chatbot Context File Uploader
+    chat_context_files = st.file_uploader(
+        "Upload Context Data for Chat (Optional - CSV/JSON)", 
+        type=["csv", "json"], 
+        accept_multiple_files=True,
+        key="chat_uploader"
+    )
     
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
+    # Render chat history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
+    # Chat Input
     if prompt := st.chat_input("Enter your query..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
@@ -232,10 +237,34 @@ with tab_chatbot:
         with st.chat_message("assistant"):
             with st.spinner("Processing..."):
                 try:
+                    # Construct Prompt with Context Data
+                    full_prompt = prompt
+                    
+                    if chat_context_files:
+                        context_data = []
+                        for df_file in chat_context_files:
+                            if df_file.name.endswith('.csv'):
+                                df = pd.read_csv(df_file)
+                                context_data.append(f"File {df_file.name}:\n{df.head(15).to_string()}")
+                            elif df_file.name.endswith('.json'):
+                                j_data = json.dumps(json.load(df_file), indent=2)
+                                context_data.append(f"File {df_file.name}:\n{j_data[:1500]}")
+                        
+                        if context_data:
+                            context_string = "\n\n".join(context_data)
+                            full_prompt = f"""
+                            Here is some context data uploaded by the user:
+                            {context_string}
+                            
+                            Based on this data and your astrophysics knowledge, answer the following query:
+                            {prompt}
+                            """
+                    
                     response = client.models.generate_content(
                         model=MODEL_ID,
-                        contents=prompt
+                        contents=full_prompt
                     )
+                    
                     st.markdown(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
