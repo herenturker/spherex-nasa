@@ -4,6 +4,8 @@ import os
 import numpy as np
 import pandas as pd
 import json
+import io
+from fpdf import FPDF
 from PIL import Image
 from google import genai
 
@@ -200,6 +202,55 @@ with tab_analysis:
                         )
                         st.markdown("### Astro-AI Report:")
                         st.info(response.text)
+                        
+                        # --- NEW DOWNLOAD BUTTONS SECTION ---
+                        st.markdown("#### Export Report")
+                        dl_col1, dl_col2, dl_col3 = st.columns(3)
+                        
+                        # 1. Markdown Download
+                        with dl_col1:
+                            st.download_button(
+                                label="Download as Markdown",
+                                data=response.text,
+                                file_name="astro_ai_report.md",
+                                mime="text/markdown",
+                                use_container_width=True
+                            )
+                            
+                        # 2. TXT Download
+                        with dl_col2:
+                            st.download_button(
+                                label="Download as TXT",
+                                data=response.text,
+                                file_name="astro_ai_report.txt",
+                                mime="text/plain",
+                                use_container_width=True
+                            )
+                            
+                        # 3. PDF Download
+                        with dl_col3:
+                            try:
+                                pdf = FPDF()
+                                pdf.add_page()
+                                pdf.set_font("Arial", size=12)
+                                # Encode text to latin-1 to handle basic characters safely in standard FPDF
+                                safe_text = response.text.encode('latin-1', 'replace').decode('latin-1')
+                                pdf.multi_cell(0, 10, txt=safe_text)
+                                
+                                # Generate PDF as bytes
+                                pdf_bytes = pdf.output(dest='S').encode('latin-1')
+                                
+                                st.download_button(
+                                    label="Download as PDF",
+                                    data=pdf_bytes,
+                                    file_name="astro_ai_report.pdf",
+                                    mime="application/pdf",
+                                    use_container_width=True
+                                )
+                            except Exception as e:
+                                st.error("PDF generation failed. Ensure 'fpdf' is in requirements.txt.")
+                        # ------------------------------------
+
                     except Exception as e:
                         st.error(f"Gemini API Error: {e}")
     else:
