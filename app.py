@@ -9,9 +9,6 @@ from fpdf import FPDF
 from PIL import Image
 from google import genai
 
-# ==========================================
-# PAGE CONFIGURATION & CUSTOM CSS
-# ==========================================
 st.set_page_config(page_title="SPHEREx Analysis Lab", layout="wide")
 
 st.markdown("""
@@ -76,9 +73,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==========================================
-# BACKEND SETUP (C++ Compilation & Gemini)
-# ==========================================
+
+if "ai_report" not in st.session_state:
+    st.session_state["ai_report"] = None
+if "pdf_data" not in st.session_state:
+    st.session_state["pdf_data"] = None
+
 if not os.path.exists("./engine"):
     try:
         subprocess.run(["g++", "-O3", "engine.cpp", "-o", "engine"], check=True)
@@ -87,7 +87,7 @@ if not os.path.exists("./engine"):
 
 if "GEMINI_API_KEY" in st.secrets:
     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-    MODEL_ID = "gemini-3.5-flash" 
+    MODEL_ID = "gemini-3.5-flash"
 else:
     st.error("Missing GEMINI_API_KEY in Streamlit Secrets.")
     st.stop()
@@ -106,11 +106,10 @@ def image_to_matrix_file(image_file, filename):
 st.title("SPHEREx Sky Change Laboratory")
 st.markdown("Compare multi-epoch infrared observations, run C++ edge-detection algorithms, and generate AI-driven scientific reports.")
 
-# Create Tabs for Analysis and Chatbot
 tab_analysis, tab_chatbot = st.tabs(["Analysis Pipeline", "Scientific AI Chatbot"])
 
 # ------------------------------------------
-# TAB 1: ANALYSIS PIPELINE (Top-to-Bottom)
+# TAB 1: ANALYSIS PIPELINE
 # ------------------------------------------
 with tab_analysis:
     st.subheader("1. Observation Inputs")
@@ -118,7 +117,6 @@ with tab_analysis:
     img_new = st.file_uploader("Upload Observation B (New)", type=["png", "jpg", "jpeg"])
     
     st.subheader("2. Scientific Data (Optional)")
-    # Multiple file upload enabled here
     data_files = st.file_uploader(
         "Upload Spectral Data (CSV/JSON) - Multiple files allowed", 
         type=["csv", "json"], 
@@ -135,6 +133,10 @@ with tab_analysis:
     st.subheader("Analysis Results & AI Interpretation")
     
     if run_btn:
+        # Yeni bir analiz başlatıldığında eski raporu temizle
+        st.session_state["ai_report"] = None
+        st.session_state["pdf_data"] = None
+        
         if not img_old or not img_new:
             st.warning("Please upload both Observation A and Observation B to run the analysis.")
         else:
@@ -157,7 +159,6 @@ with tab_analysis:
                         st.success(f"C++ Engine Result:\n{engine_output}")
                         engine_summary = engine_output
                         
-                    # Process Multiple Data Files
                     data_summary = "No supplementary spectral data provided."
                     if data_files:
                         combined_data = []
@@ -200,60 +201,53 @@ with tab_analysis:
                             model=MODEL_ID,
                             contents=prompt
                         )
-                        st.markdown("### Astro-AI Report:")
-                        st.info(response.text)
                         
-                        # --- NEW DOWNLOAD BUTTONS SECTION ---
-                        st.markdown("#### Export Report")
-                        dl_col1, dl_col2, dl_col3 = st.columns(3)
+                        st.session_state["ai_report"] = response.text
+                        pdf = FPDF()
+                        pdf.add_page()
+                        pdf.set_font("Arial", size=12)
+                        safe_text = response.text.encode('latin-1', 'replace').decode('latin-1')
+                        pdf.multi_cell(0, 10, txt=safe_text)
+                        st.session_state["pdf_data"] = pdf.output(dest='S').encode('latin-1')
                         
-                        # 1. Markdown Download
-                        with dl_col1:
-                            st.download_button(
-                                label="Download as Markdown",
-                                data=response.text,
-                                file_name="astro_ai_report.md",
-                                mime="text/markdown",
-                                use_container_width=True
-                            )
-                            
-                        # 2. TXT Download
-                        with dl_col2:
-                            st.download_button(
-                                label="Download as TXT",
-                                data=response.text,
-                                file_name="astro_ai_report.txt",
-                                mime="text/plain",
-                                use_container_width=True
-                            )
-                            
-                        # 3. PDF Download
-                        with dl_col3:
-                            try:
-                                pdf = FPDF()
-                                pdf.add_page()
-                                pdf.set_font("Arial", size=12)
-                                # Encode text to latin-1 to handle basic characters safely in standard FPDF
-                                safe_text = response.text.encode('latin-1', 'replace').decode('latin-1')
-                                pdf.multi_cell(0, 10, txt=safe_text)
-                                
-                                # Generate PDF as bytes
-                                pdf_bytes = pdf.output(dest='S').encode('latin-1')
-                                
-                                st.download_button(
-                                    label="Download as PDF",
-                                    data=pdf_bytes,
-                                    file_name="astro_ai_report.pdf",
-                                    mime="application/pdf",
-                                    use_container_width=True
-                                )
-                            except Exception as e:
-                                st.error("PDF generation failed. Ensure 'fpdf' is in requirements.txt.")
-                        # ------------------------------------
-
                     except Exception as e:
                         st.error(f"Gemini API Error: {e}")
-    else:
+
+    if st.session_state["ai_report"]:
+        st.markdown("### Astro-AI Report:")
+        st.info(st.session_state["ai_report"])
+        
+        st.markdown("#### Export Report")
+        dl_col1, dl_col2, dl_col3 = st.columns(3)
+        
+        with dl_col1:
+            st.download_button(
+                label="Download as Markdown",
+                data=st.session_state["ai_report"],
+                file_name="astro_ai_report.md",
+                mime="text/markdown",
+                use_container_width=True
+            )
+            
+        with dl_col2:
+            st.download_button(
+                label="Download as TXT",
+                data=st.session_state["ai_report"],
+                file_name="astro_ai_report.txt",
+                mime="text/plain",
+                use_container_width=True
+            )
+            
+        with dl_col3:
+            if st.session_state["pdf_data"]:
+                st.download_button(
+                    label="Download as PDF",
+                    data=st.session_state["pdf_data"],
+                    file_name="astro_ai_report.pdf",
+                    mime="application/pdf",
+                    use_container_width=True
+                )
+    elif not run_btn:
         st.info("Awaiting inputs. Upload images and click 'Execute Analysis Pipeline'.")
 
 # ------------------------------------------
@@ -263,7 +257,6 @@ with tab_chatbot:
     st.subheader("Scientific AI Assistant")
     st.markdown("Query the AI regarding SPHEREx data, astrophysics, or upload context files for direct analysis.")
     
-    # Chatbot Context File Uploader
     chat_context_files = st.file_uploader(
         "Upload Context Data for Chat (Optional - CSV/JSON)", 
         type=["csv", "json"], 
@@ -274,12 +267,10 @@ with tab_chatbot:
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Render chat history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # Chat Input
     if prompt := st.chat_input("Enter your query..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
@@ -288,7 +279,6 @@ with tab_chatbot:
         with st.chat_message("assistant"):
             with st.spinner("Processing..."):
                 try:
-                    # Construct Prompt with Context Data
                     full_prompt = prompt
                     
                     if chat_context_files:
