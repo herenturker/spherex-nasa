@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import json
 import io
+import time
 from fpdf import FPDF
 from PIL import Image
 from google import genai
@@ -87,7 +88,7 @@ if not os.path.exists("./engine"):
 
 if "GEMINI_API_KEY" in st.secrets:
     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-    MODEL_ID = "gemini-3.5-flash"
+    MODEL_ID = "gemini-3.5-flash-lite" 
 else:
     st.error("Missing GEMINI_API_KEY in Streamlit Secrets.")
     st.stop()
@@ -100,17 +101,29 @@ def image_to_matrix_file(image_file, filename):
     np.savetxt(filename, matrix)
     return filename
 
-# ==========================================
-# USER INTERFACE
-# ==========================================
+def generate_ai_content(prompt_text, retries=3):
+    for attempt in range(retries):
+        try:
+            response = client.models.generate_content(
+                model=MODEL_ID,
+                contents=prompt_text
+            )
+            return response.text
+        except Exception as e:
+            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                if attempt < retries - 1:
+                    time.sleep(35)
+                else:
+                    raise Exception("API Rate Limit (429) exceeded. Please wait a minute and try again.")
+            else:
+                raise e
+
+
 st.title("SPHEREx Sky Change Laboratory")
 st.markdown("Compare multi-epoch infrared observations, run C++ edge-detection algorithms, and generate AI-driven scientific reports.")
 
 tab_analysis, tab_chatbot = st.tabs(["Analysis Pipeline", "Scientific AI Chatbot"])
 
-# ------------------------------------------
-# TAB 1: ANALYSIS PIPELINE
-# ------------------------------------------
 with tab_analysis:
     st.subheader("1. Observation Inputs")
     img_old = st.file_uploader("Upload Observation A (Old)", type=["png", "jpg", "jpeg"])
@@ -133,7 +146,6 @@ with tab_analysis:
     st.subheader("Analysis Results & AI Interpretation")
     
     if run_btn:
-        # Yeni bir analiz başlatıldığında eski raporu temizle
         st.session_state["ai_report"] = None
         st.session_state["pdf_data"] = None
         
@@ -197,16 +209,13 @@ with tab_analysis:
                     """
                     
                     try:
-                        response = client.models.generate_content(
-                            model=MODEL_ID,
-                            contents=prompt
-                        )
+                        report_text = generate_ai_content(prompt)
                         
-                        st.session_state["ai_report"] = response.text
+                        st.session_state["ai_report"] = report_text
                         pdf = FPDF()
                         pdf.add_page()
                         pdf.set_font("Arial", size=12)
-                        safe_text = response.text.encode('latin-1', 'replace').decode('latin-1')
+                        safe_text = report_text.encode('latin-1', 'replace').decode('latin-1')
                         pdf.multi_cell(0, 10, txt=safe_text)
                         st.session_state["pdf_data"] = pdf.output(dest='S').encode('latin-1')
                         
@@ -250,9 +259,7 @@ with tab_analysis:
     elif not run_btn:
         st.info("Awaiting inputs. Upload images and click 'Execute Analysis Pipeline'.")
 
-# ------------------------------------------
-# TAB 2: MODERN CHATBOT WITH DATA ANALYSIS
-# ------------------------------------------
+
 with tab_chatbot:
     st.subheader("Scientific AI Assistant")
     st.markdown("Query the AI regarding SPHEREx data, astrophysics, or upload context files for direct analysis.")
@@ -301,12 +308,9 @@ with tab_chatbot:
                             {prompt}
                             """
                     
-                    response = client.models.generate_content(
-                        model=MODEL_ID,
-                        contents=full_prompt
-                    )
+                    bot_reply = generate_ai_content(full_prompt)
                     
-                    st.markdown(response.text)
-                    st.session_state.messages.append({"role": "assistant", "content": response.text})
+                    st.markdown(bot_reply)
+                    st.session_state.messages.append({"role": "assistant", "content": bot_reply})
                 except Exception as e:
                     st.error(f"Error: {e}")
