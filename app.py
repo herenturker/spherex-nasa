@@ -87,7 +87,7 @@ if not os.path.exists("./engine"):
 
 if "GEMINI_API_KEY" in st.secrets:
     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-    MODEL_ID = "gemini-3.5-flash"
+    MODEL_ID = "gemini-1.5-flash"
 else:
     st.error("Missing GEMINI_API_KEY in Streamlit Secrets.")
     st.stop()
