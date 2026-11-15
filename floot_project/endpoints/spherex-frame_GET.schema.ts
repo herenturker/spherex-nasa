@@ -1,0 +1,10 @@
+import { z } from 'zod';
+export const schema = z.object({
+  url: z.string().url().max(1000),
+});
+export type OutputType = {
+  png: string;
+  width: number;
+  height: number;
+  note: string;
+};

@@ -1,0 +1,22 @@
+{
+  "generated_utc": "2026-11-15T19:07:48.526031+00:00",
+  "purpose": "GitHub submission documentation, science audit and PostgreSQL restoration tools",
+  "files_sha256": {
+    "START_HERE_TR.md": "be5ce8788682958a69851f123926f8e84d77766fb29548859cadfbb66d2891f8",
+    "README.md": "2d940336048a83c8abd6d1e1eee78f1606d73a1cb8dd9785493a5d76728c0e41",
+    ".gitignore": "eccf480236150dd31d64a0b2275ccd955804278fad7fffbc3cf172e231a0b243",
+    "docs/LICENSING.md": "8a469791b6a2a8bf35e21b604a145d159a7acdacd60c000e93122edd3c177611",
+    "docs/QUALITY_AUDIT.json": "be82afeffa199e77ee97ed21e3aaef7cce9ce0b0242394a3844cc6af20a27611",
+    "docs/README_TR.md": "c7f2de2ef9a65d1934fc63ad3be1dee0eb69312637698aff22d458ed88bb88fa",
+    "docs/SCIENCE_METHOD.md": "45d0d7c60edc935a3eff32c03d906b6745fa1fc0f2d842ce2ff8690420a6de02",
+    "docs/DEPENDENCIES.md": "d5da9dedae494ae0c9be565a51587568811293b7c25c14c0801467db1fd6f97b",
+    "docs/GITHUB_SUBMISSION_CHECKLIST.md": "4953f18d291730fca38258a7617e59cac91aaa73854269d5cd51e6a1a6c54736",
+    "docs/REPRODUCIBILITY_LIMITS.md": "ac12f07525d5da256eadca35405f07b158e1ec396c80de4dac3ffc89294817b6",
+    "scripts/verify_package.py": "79be5d7fa64b2922bb3647665385e57400ded069e74f2d54d94fe751c0eec36e",
+    "scripts/restore_postgres.py": "d6b1d5525e4f44a76e8734410587ee62d34f4f4dcbc16a7edd97be0941dbaf3c",
+    "scripts/validate_science_snapshot.py": "5e52c90c57b2efc58cffec7e2fb649e2200b6f009b62fc95f1cef738d44f8854",
+    "assets/README.md": "0b094528fbe52b657fb0662881d52c1d5a0aea7ee76de18188e76cdd2bc7f4d8",
+    "database/RESTORE.md": "c2b8ccb56c8b5287db421651a13fd4e8e69d5c5249bc2211286f7c5523d88830",
+    "database/schema.sql": "26ab6093ab748d8ae327c2a513857406ab1910a275eed6427ee166872bdd8b77"
+  }
+}

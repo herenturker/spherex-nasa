@@ -1,0 +1,13 @@
+{
+  "project": "SPHEREx Sky Explorer — Cemberlitas Anatolian High School",
+  "project_id": "cb006d72-53d8-40e4-b342-2e8db83b3d00",
+  "published_domain": "https://www.cemberlitasmeninhack.com",
+  "source_release_id": "1794767128751f7e784c0-1ab6-441a-bb3a-c7dcb14c8920",
+  "release_published_at": "2026-11-15T18:25:28.064Z",
+  "source_file_count": 217,
+  "source_description": "217 complete non-internal Floot virtual source files, original per-file SHA-256 verified",
+  "data_description": "Four-table normalized PostgreSQL snapshot: 19/19/114/62 rows; science gzip may be regenerated from published API while preserving decoded scientific content",
+  "runtime_note": "Floot-native. The proprietary Floot runtime and secrets cannot be bundled.",
+  "generated_at": "2026-11-15T19:09:19.968Z",
+  "issues": []
+}

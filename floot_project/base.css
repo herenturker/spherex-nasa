@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+:root {
+  /* Overlay layers */
+  --z-overlay: 400;
+  --z-spotlight: 1000; /* Tutorial spotlights/guided help */
+  /* System layers */
+  --z-critical: 2000; /* Critical system notifications */
+  /* spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+}
+:root {
+  --background: #080d1b; --foreground: #edf1ff;
+  --surface: #111a2c; --surface-foreground: #e8edfc; --sidebar: #0d1526; --sidebar-foreground: #e8edfc;
+  --card: #111b31; --card-foreground: #ecf0ff; --popup: #1b2540; --popup-foreground: #eef2ff;
+  --primary: #9f9dff; --primary-foreground: #10152b; --secondary: #283453; --secondary-foreground: #dbe2ff;
+  --accent: #6b79bb; --accent-foreground: #f7f8ff; --muted: #202a40; --muted-foreground: #a7b5d4;
+  --success: #53c9aa; --success-foreground: #071d16; --error: #e887a0; --error-foreground: #280c16;
+  --warning: #efc57a; --warning-foreground: #241b0d; --info: #88baff; --info-foreground: #102139;
+  --info-hover: #b4d4ff; --info-active: #5b9fe9; --border: #35405e;
+  --font-family-base: 'IBM Plex Sans', system-ui, sans-serif; --font-family-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-family-monospace: 'IBM Plex Mono', monospace; --font-family-cursive: Georgia, serif;
+  --shadow: 0 4px 16px #0003; --shadow-md: 0 14px 32px #0005; --shadow-lg: 0 24px 56px #0007;
+  --shadow-focus: 0 0 0 3px #9f9dff50;
+  --radius-sm: 6px; --radius: 10px; --radius-md: 14px; --radius-lg: 20px; --radius-full: 999px;
+  --animation-duration-fast: 120ms; --animation-duration-normal: 220ms; --animation-duration-slow: 400ms;
+  --chart-color-1: #9f9dff; --chart-color-2: #67bed6; --chart-color-3: #f3c37d; --chart-color-4: #b8a0da; --chart-color-5: #5ac9a3;
+}
+.dark {}

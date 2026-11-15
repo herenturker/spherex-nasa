@@ -1,0 +1,12 @@
+.actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:12px;margin-top:10px;background:#152b43;border:1px solid #587b92;border-radius:11px;color:#dcecff}
+.actions strong{flex:0 0 100%;font-size:11px;overflow-wrap:anywhere}
+.actions button,.actions a,.dialog button{display:inline-flex;align-items:center;gap:6px;padding:10px 12px;border:1px solid #9394d4;border-radius:9px;background:#5552a35b;color:#eeeaff;cursor:pointer;text-decoration:none;font-size:12px;font-weight:650}
+.actions small{flex:0 0 100%;color:#b0c5de;font-size:11px}
+.overlay{position:fixed;inset:0;z-index:99999;background:#040a15e8;display:flex;align-items:center;justify-content:center;padding:12px}
+.dialog{width:min(100%,1000px);max-height:94vh;display:flex;flex-direction:column;background:#101b2f;border:1px solid #91a7d5;border-radius:13px;color:#ecf0ff;box-shadow:0 20px 70px #000a;overflow:hidden}
+.dialog header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid #3a4e6e}
+.dialog header strong{font-size:13px;overflow-wrap:anywhere}
+.dialog .contents{overflow:auto;margin:0;padding:16px;background:#090f1d;white-space:pre;tab-size:2;font:11px/1.6 ui-monospace,monospace;min-height:120px}
+.dialog .image{max-height:68vh;max-width:100%;object-fit:contain;margin:auto}
+.dialog p{font-size:11px;color:#b8c7da;margin:9px 16px}
+.dialog footer{display:flex;gap:10px;padding:14px;border-top:1px solid #3a4e6e}

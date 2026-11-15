@@ -1,0 +1,11 @@
+.root{display:inline-flex;align-items:center;gap:7px;flex-wrap:nowrap;color:#b7c6ec}
+.caption{font-size:11px;letter-spacing:.5px;white-space:nowrap;margin-right:2px}
+.active,.inactive{display:inline-flex;align-items:center;justify-content:center;gap:5px;border-radius:11px;padding:8px 10px;border:1px solid #4d5d83;background:#17233d;color:#b4c0dc;font:600 11px var(--font-family-base);cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease;white-space:nowrap}
+.active{transform:scale(1);background:#373b6b;border-color:#b1a8fa;color:#fff;box-shadow:0 0 0 1px #8479dd40}
+.inactive{transform:scale(.9);opacity:.85}
+.active .flag,.inactive .flag{font-size:17px;line-height:1}
+.inactive:hover{transform:scale(1.02);opacity:1;border-color:#a99ff7}
+.active:hover{transform:scale(1.04)}
+.active:focus-visible,.inactive:focus-visible{outline:2px solid #b4abff;outline-offset:3px}
+@media(max-width:560px){.root{gap:2px}.caption{font-size:10px}.active,.inactive{padding:7px 6px;font-size:10px}.active .flag,.inactive .flag{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.active,.inactive{transition:none}}

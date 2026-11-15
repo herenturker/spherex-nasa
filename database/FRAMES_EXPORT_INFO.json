@@ -1,0 +1,103 @@
+{
+  "kind": "normalized PostgreSQL data backup",
+  "notes": "Raw metadata preserved. preview_png preserved from published database-backed API. science_gzip regenerated losslessly from decoded published science JSON, including accepted legacy ePSF normalization; original gzip byte streams may differ.",
+  "rowCount": 114,
+  "targets": [
+    {
+      "target": "barnard",
+      "rows": 9,
+      "bytes": 5810134
+    },
+    {
+      "target": "eps-indi-b",
+      "rows": 8,
+      "bytes": 6170411
+    },
+    {
+      "target": "eps-indi-b-d6",
+      "rows": 8,
+      "bytes": 10386104
+    },
+    {
+      "target": "m104",
+      "rows": 3,
+      "bytes": 1030043
+    },
+    {
+      "target": "m13",
+      "rows": 3,
+      "bytes": 2034106
+    },
+    {
+      "target": "m101",
+      "rows": 9,
+      "bytes": 5914594
+    },
+    {
+      "target": "m31",
+      "rows": 3,
+      "bytes": 1454427
+    },
+    {
+      "target": "m33",
+      "rows": 3,
+      "bytes": 2526443
+    },
+    {
+      "target": "m42",
+      "rows": 6,
+      "bytes": 3811932
+    },
+    {
+      "target": "m51",
+      "rows": 3,
+      "bytes": 1251620
+    },
+    {
+      "target": "m45",
+      "rows": 3,
+      "bytes": 1937080
+    },
+    {
+      "target": "m81",
+      "rows": 4,
+      "bytes": 1771368
+    },
+    {
+      "target": "m82",
+      "rows": 3,
+      "bytes": 932389
+    },
+    {
+      "target": "m87",
+      "rows": 6,
+      "bytes": 2354505
+    },
+    {
+      "target": "r-dra",
+      "rows": 8,
+      "bytes": 3375851
+    },
+    {
+      "target": "wise-0855",
+      "rows": 8,
+      "bytes": 5432139
+    },
+    {
+      "target": "rw-aur",
+      "rows": 11,
+      "bytes": 6776064
+    },
+    {
+      "target": "wise-0855-d5",
+      "rows": 8,
+      "bytes": 9666748
+    },
+    {
+      "target": "wise-0855-d6",
+      "rows": 8,
+      "bytes": 10309278
+    }
+  ],
+  "exportedUTC": "2026-11-15T19:04:43.174Z"
+}

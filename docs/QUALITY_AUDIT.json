@@ -1,0 +1,17 @@
+{
+  "audit_date": "2026-11-15",
+  "project": "SPHEREx Sky Explorer — Men in Hack",
+  "note": "Internal checks of archived processed science arrays and reported ePSF formulae; NOT full independent raw-FITS reprocessing or calibrated source photometry.",
+  "primary_nasa_suggested_targets": [
+    {"target_id":"barnard","name":"Barnard's Star","science_frames":9,"epsf_ready":9,"note":"Six legacy ePSF records normalized from oversampling assumption."},
+    {"target_id":"eps-indi-b","name":"Epsilon Indi B","science_frames":8,"epsf_ready":8,"note":"Field difference does not independently establish proper motion."},
+    {"target_id":"wise-0855","name":"WISE 0855−0714","science_frames":8,"epsf_ready":8,"note":"Sky field images do not establish detection of faint Y-type brown dwarf."},
+    {"target_id":"rw-aur","name":"RW Aurigae","science_frames":11,"epsf_ready":11,"note":"Field values do not separate binary components photometrically."},
+    {"target_id":"r-dra","name":"R Draconis","science_frames":8,"epsf_ready":8,"note":"All eight saved science frames lacked sufficiently valid central stellar aperture pixels."}
+  ],
+  "total_primary_frames": 44,
+  "epsf_formula": "FWHM (arcsec) ~ 2.35482 * sigma_native_pix * 6.15",
+  "software_tests": {"jasmine_spec_files_passing":8,"synthetic_internal_tests_passing":15},
+  "published_domain":"https://www.cemberlitasmeninhack.com/",
+  "release_id":"1794767128751f7e784c0-1ab6-441a-bb3a-c7dcb14c8920"
+}

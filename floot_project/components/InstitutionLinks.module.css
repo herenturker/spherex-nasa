@@ -1,0 +1,15 @@
+.hero,.footer{display:flex;justify-content:flex-end;align-items:center;gap:17px;flex:0 0 auto}
+.footer{justify-content:center;padding:18px 16px 29px;gap:23px}
+.logoTile,.nasaTile{height:96px;width:96px;box-sizing:border-box;border-radius:18px;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;text-decoration:none;cursor:pointer;flex:none;transition:transform .2s ease,box-shadow .2s ease}
+.logoTile{background:#fff;padding:5px;border:1px solid #ffffffaa;box-shadow:0 7px 21px #0006}
+.logoTile img{width:100%;height:100%;object-fit:contain;display:block}
+.nasaTile{background:#172944;border:1px solid #576785;color:#ecf0ff;gap:5px;box-shadow:0 7px 21px #0006}
+.nasaText{font:800 24px/1.1 var(--font-family-display);letter-spacing:2px;color:inherit}
+.nasaSub{font:600 7px/1.1 var(--font-family-monospace);letter-spacing:.9px;color:#b6c6e0}
+.logoTile:hover,.nasaTile:hover{transform:scale(1.075);box-shadow:0 10px 26px #0008,0 0 0 2px #aaa2ff50}
+.logoTile:focus-visible,.nasaTile:focus-visible{outline:3px solid #aaa2ff;outline-offset:5px}
+.footer .logoTile,.footer .nasaTile{height:110px;width:110px;border-radius:20px}
+.footer .nasaText{font-size:27px}
+@media(max-width:800px){.hero{justify-content:flex-end;width:100%;padding-top:4px}.hero .logoTile,.hero .nasaTile{height:80px;width:80px;border-radius:14px}.hero .nasaText{font-size:21px}}
+@media(max-width:430px){.hero{gap:12px}.hero .logoTile,.hero .nasaTile{height:72px;width:72px}.footer .logoTile,.footer .nasaTile{height:88px;width:88px}.footer .nasaText{font-size:23px}}
+@media(prefers-reduced-motion:reduce){.logoTile,.nasaTile{transition:none}}

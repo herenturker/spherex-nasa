@@ -1,0 +1,48 @@
+{
+  "source_release": "1794767128751f7e784c0-1ab6-441a-bb3a-c7dcb14c8920",
+  "tables": {
+    "spherex_targets": 19,
+    "spherex_catalog_cache": 19,
+    "spherex_processed_frames": 114,
+    "spherex_reports": 62
+  },
+  "processed_frames_partition_count": 19,
+  "science_data_note": "Raw metadata preserved. preview_png preserved from published database-backed API. science_gzip regenerated losslessly from decoded published science JSON, including accepted legacy ePSF normalization; original gzip byte streams may differ.",
+  "report_parts": [
+    {
+      "part": 1,
+      "rows": 31,
+      "sqlCalls": 57,
+      "groups": {
+        "barnard": 7,
+        "eps-indi-b-d6": 1,
+        "eps-indi-b": 3,
+        "m101": 4,
+        "m104": 3,
+        "m13": 3,
+        "m31": 3,
+        "m33": 3,
+        "m42": 4
+      }
+    },
+    {
+      "part": 2,
+      "rows": 31,
+      "sqlCalls": 66,
+      "groups": {
+        "m42": 1,
+        "m45": 3,
+        "m51": 3,
+        "m81": 3,
+        "m82": 3,
+        "m87": 6,
+        "r-dra": 3,
+        "rw-aur": 4,
+        "wise-0855-d5": 1,
+        "wise-0855-d6": 1,
+        "wise-0855": 3
+      }
+    }
+  ],
+  "generated_at": "2026-11-15T19:09:19.967Z"
+}
